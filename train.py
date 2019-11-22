@@ -118,8 +118,6 @@ def train():
     # create batch iterator
     batch_iterator = iter(data_loader)
     for iteration in range(args.start_iter, cfg['max_iter']):
-        if iteration in cfg['lr_steps']:
-            step_index += 1
         # load train data
         try:
             images, targets = next(batch_iterator)
@@ -143,7 +141,9 @@ def train():
         loss = loss_l + loss_c
         loss.backward()
         optimizer.step()
-        scheduler.step()
+        if iteration in cfg['lr_steps']:
+            step_index += 1
+            scheduler.step()
         t1 = time.time()
         loc_loss += loss_l.item()
         conf_loss += loss_c.item()
