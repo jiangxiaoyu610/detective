@@ -11,6 +11,8 @@ import torch.utils.data as data
 import cv2
 import numpy as np
 
+from data.image_process import remove_redundancy_color
+
 '''
 SIXray_CLASSES = (  # always index 0
     'gun', 'knife', 'wrench', 'pliers',
@@ -205,6 +207,8 @@ class SIXrayDetection(data.Dataset):
         height, width, channels = img.shape
         # print("height: " + str(height) + " ; width : " + str(width) + " ; channels " + str(channels) )
         og_img = img
+        # 对图片去除多余颜色等预处理
+        img = remove_redundancy_color(img)
 
         # print (img_id)
         if self.target_transform is not None:
