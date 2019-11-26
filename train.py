@@ -109,7 +109,7 @@ def train():
     print('Using the specified args:')
     print(args)
 
-    step_index = 0
+    step_index = args.start_iter
 
     data_loader = data.DataLoader(dataset, args.batch_size,
                                   num_workers=args.num_workers,
