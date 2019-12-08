@@ -22,6 +22,25 @@ def keep_special_color(image, up_bound, down_bound):
     return masked_image
 
 
+def y_channel_equalize_hist(image):
+    """
+    进行 y 通道直方图均衡化。
+    主要目的是加强颜色对比度。
+    ** 查看效果后决定暂时不用。
+    :param image:
+    :return:
+    """
+    # Y 通道均衡化
+    yuv_image = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+    yuv_channels = cv2.split(yuv_image)
+    yuv_channels[0] = cv2.equalizeHist(yuv_channels[0])
+    channels = cv2.merge(yuv_channels)
+
+    result = cv2.cvtColor(channels, cv2.COLOR_YCrCb2BGR)
+
+    return result
+
+
 def normalize_hist(image):
     """
     直方图正规化
@@ -68,7 +87,7 @@ def remove_redundancy_color(image):
     tmp_image = cv2.add(blue_image, cyan_image)
     tmp_image = cv2.add(tmp_image, green_image)
 
-    result = normalize_hist(tmp_image)
+    result = y_channel_equalize_hist(tmp_image)
 
     result = sharpen_image(result)
 
