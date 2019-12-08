@@ -40,6 +40,8 @@ parser.add_argument('--cuda', default=False, type=str2bool,
                     help='Use cuda to train model')
 parser.add_argument('--dataset_root', default=SIXray_ROOT,
                     help='Location of VOC root directory')
+parser.add_argument('--dataset', default='test.txt', type=str,
+                    help='Test file')
 parser.add_argument('--cleanup', default=True, type=str2bool,
                     help='Cleanup and remove results files following eval')
 
@@ -441,7 +443,7 @@ if __name__ == '__main__':
     net.eval()
     print('Finished loading model!')
     # load data
-    dataset = SIXrayDetection(args.dataset_root, 'test.txt',
+    dataset = SIXrayDetection(args.dataset_root, args.dataset,
                               BaseTransform(300, dataset_mean),
                               SIXrayAnnotationTransform())
     if args.cuda:
