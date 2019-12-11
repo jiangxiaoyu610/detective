@@ -129,4 +129,4 @@ data/ssd_dataloader.py
 data/core
 data/core_3000
 data/coreless_3000
-weights.zip
+weights*.zip
