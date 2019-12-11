@@ -40,7 +40,7 @@ parser.add_argument('--cuda', default=False, type=str2bool,
                     help='Use cuda to train model')
 parser.add_argument('--dataset_root', default=SIXray_ROOT,
                     help='Location of VOC root directory')
-parser.add_argument('--dataset', default='test.txt', type=str,
+parser.add_argument('--dataset', default=None, type=str,
                     help='Test file')
 parser.add_argument('--cleanup', default=True, type=str2bool,
                     help='Cleanup and remove results files following eval')

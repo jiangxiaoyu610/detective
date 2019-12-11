@@ -5,6 +5,7 @@ https://github.com/fmassa/vision/blob/voc_dataset/torchvision/datasets/voc.py
 
 Updated by: Ellis Brown, Max deGroot
 """
+import os
 import os.path as osp
 import torch
 import torch.utils.data as data
@@ -41,6 +42,16 @@ SIXray_CLASSES = (
 # note: if you used our download scripts, this should be right
 # SIXray_ROOT = "/media/trs2/Xray20190723/"
 SIXray_ROOT = "./data/core"
+
+
+def listdir(path, list_name):  # 传入存储的list
+    for filename in os.listdir(path):
+        file_path = os.path.join(path, filename)
+        if os.path.isdir(file_path):
+            listdir(file_path, list_name)
+        else:
+            (name, suffix) = os.path.splitext(filename)
+            list_name.append(name)
 
 
 class SIXrayAnnotationTransform(object):
@@ -157,20 +168,20 @@ class SIXrayDetection(data.Dataset):
                  transform=None, target_transform=SIXrayAnnotationTransform(),
                  dataset_name='SIXray'):
         self.root = root
-        self.image_set = osp.join(root, image_set)
         self.transform = transform
         self.target_transform = target_transform
         self.name = dataset_name
         self._annopath = osp.join('%s' % self.root, 'Annotation', '%s.txt')
         self._imgpath = osp.join('%s' % self.root, 'Image', '%s.jpg')
         self.ids = list()
-
-        # listdir = os.listdir(osp.join('%s' % self.root, 'Annotation'))
-
-        with open(self.image_set, 'r') as f:
-            lines = f.readlines()
-            for line in lines:
-                self.ids.append(line.strip('\n'))
+        if image_set is None:
+            listdir(os.path.join(root, 'Annotation'), self.ids)
+        else:
+            self.image_set = osp.join(root, image_set)
+            with open(self.image_set, 'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    self.ids.append(line.strip('\n'))
 
         '''
         for name in listdir:
