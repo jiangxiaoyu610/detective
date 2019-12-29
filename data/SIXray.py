@@ -166,23 +166,37 @@ class SIXrayDetection(data.Dataset):
     def __init__(self, root,
                  image_set,
                  transform=None, target_transform=SIXrayAnnotationTransform(),
-                 dataset_name='SIXray'):
+                 dataset_name='SIXray',
+                 test_set_path=None):
         self.root = root
         self.transform = transform
         self.target_transform = target_transform
         self.name = dataset_name
-        self._annopath = osp.join('%s' % self.root, 'Annotation', '%s.txt')
-        self._imgpath = osp.join('%s' % self.root, 'Image', '%s.jpg')
         self.ids = list()
-        if image_set is None:
-            listdir(os.path.join(root, 'Annotation'), self.ids)
+        # 没有给出测试集的图片和标签
+        if test_set_path is None:
+            self._annopath = osp.join('%s' % self.root, 'Annotation', '%s.txt')
+            self._imgpath = osp.join('%s' % self.root, 'Image', '%s.jpg')
+            if image_set is None:
+                listdir(os.path.join(root, 'Annotation'), self.ids)
+            else:
+                self.image_set = osp.join(root, image_set)
+                with open(self.image_set, 'r') as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        self.ids.append(line.strip('\n'))
+        # 给出了测试集的图片和标签，则代表是要读取的是测试集
         else:
-            self.image_set = osp.join(root, image_set)
-            with open(self.image_set, 'r') as f:
-                lines = f.readlines()
-                for line in lines:
-                    self.ids.append(line.strip('\n'))
-
+            self._imgpath = osp.join(test_set_path[0], '%s.jpg')
+            self._annopath = osp.join(test_set_path[1], '%s.txt')
+            if image_set is None:
+                listdir(test_set_path[1], self.ids)
+            else:
+                self.image_set = osp.join(root, image_set)
+                with open(self.image_set, 'r') as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        self.ids.append(line.strip('\n'))
         '''
         for name in listdir:
             self.ids.append(osp.splitext(name)[0])
