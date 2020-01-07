@@ -17,12 +17,14 @@ labelmap = (
 parser = argparse.ArgumentParser(description='Single Shot MultiBox Detector Training With Pytorch')
 
 parser.add_argument('--predicted_file', default='', type=str, help='Checkpoint state_dict file for transfer learning')
+parser.add_argument('--annopath', default='./Anno_test', type=str, help='annotations file path')
+parser.add_argument('--test_image_file', default='./core_coreless_test.txt', type=str, help='a text file with test set image names')
 args = parser.parse_args()
 
 # annopath = os.path.join('/home/rustin/weiyanlu/Anno_test', '%s.xml')#测试集标注文件路径
 # test_imagesetfile = '/home/rustin/weiyanlu/core_coreless_test.txt'#测试集里面的图片名
-annopath = os.path.join('./Anno_test', '%s.xml')#测试集标注文件路径
-test_imagesetfile = './core_coreless_test.txt'#测试集里面的图片名
+annopath = os.path.join('./{}'.format(args.annopath), '%s.xml') #测试集标注文件路径
+test_imagesetfile = args.test_image_file #测试集里面的图片名
 '''
 def get_voc_results_file_template(image_set, cls):
     # VOCdevkit/VOC2007/results/det_test_aeroplane.txt
